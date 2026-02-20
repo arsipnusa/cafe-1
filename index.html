@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Nusa Coffee</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#291c0e',
+                        mocha: '#6e473b',
+                        latte: '#a78d78',
+                        oat: '#beb5a9',
+                        cream: '#e1d4c2',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .reveal { @apply opacity-0 translate-y-10 transition-all duration-[1000ms] ease-[cubic-bezier(0.5,0,0,1)]; }
+            .reveal.active { @apply opacity-100 translate-y-0; }
+            .delay-1 { transition-delay: 200ms; }
+            
+            .nav-link { @apply text-mocha font-semibold text-[0.95rem] py-2.5 px-4 rounded-xl transition-all duration-300 flex items-center relative whitespace-nowrap; }
+            .nav-link:hover, .nav-link.active-nav { @apply text-espresso bg-white/60 translate-x-1 shadow-sm; }
+            .nav-link.active-nav::before { content: ''; @apply absolute left-1.5 w-1.5 h-1.5 bg-espresso rounded-full hidden lg:block; }
+            
+            details > summary { list-style: none; }
+            details > summary::-webkit-details-marker { display: none; }
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .snap-x-mandatory { scroll-snap-type: x mandatory; }
+        .snap-center { scroll-snap-align: center; }
+    </style>
+
+    <style>
+        html { scrollbar-width: auto; scrollbar-color: #6e473b #e1d4c2; }
+        ::-webkit-scrollbar { width: 14px; }
+        ::-webkit-scrollbar-track { background: #e1d4c2; }
+        ::-webkit-scrollbar-thumb { background-color: #6e473b; border-radius: 10px; border: 3px solid #e1d4c2; transition: background-color 0.3s ease; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #291c0e; }
+    </style>
+</head>
+<body class="bg-cream text-espresso font-sans antialiased overflow-x-hidden relative">
+
+    <nav id="floating-nav" class="fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 lg:-translate-x-12 bottom-6 left-1/2 -translate-x-1/2 lg:bottom-auto opacity-0 invisible flex lg:flex-col flex-row items-center lg:items-stretch gap-2 lg:gap-3 bg-white/45 backdrop-blur-xl border border-white/50 lg:p-5 p-3 rounded-full lg:rounded-3xl shadow-[0_15px_35px_rgba(41,28,14,0.05)] transition-all duration-700 z-50 w-max max-w-[90%] overflow-x-auto no-scrollbar">
+        <div class="font-serif font-bold text-espresso text-base lg:text-lg lg:mb-3 lg:pb-3 lg:border-b-2 lg:border-r-0 border-r-2 border-oat lg:pr-0 pr-4 text-center whitespace-nowrap">
+            Arsip Nusa
+        </div>
+        <div class="flex lg:flex-col flex-row gap-1 lg:gap-2 px-2 lg:px-0">
+            <a href="#cerita" class="nav-link">Cerita</a>
+            <a href="#kopi" class="nav-link">Kopi</a>
+            <a href="#makanan" class="nav-link">Makanan</a>
+            <a href="#dessert" class="nav-link">Dessert</a>
+            <a href="#ruangan" class="nav-link">Ruangan</a>
+            <a href="#lokasi" class="nav-link">Lokasi</a>
+        </div>
+    </nav>
+
+    <a href="https://wa.me/6281234567890?text=Halo%20Arsip%20Nusa%20Coffee,%20saya%20di%20Meja%20No.%20...%20mau%20pesan:" target="_blank" class="fixed lg:bottom-8 lg:right-8 bottom-24 right-5 bg-espresso text-cream w-14 h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-2xl shadow-[0_10px_25px_rgba(41,28,14,0.3)] hover:scale-110 hover:-translate-y-1 hover:bg-mocha transition-all duration-300 z-[100] border-2 border-white/20 group">
+        <i class="fas fa-concierge-bell"></i>
+        <span class="absolute -top-3 -right-2 bg-red-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Pesan!</span>
+    </a>
+
+    <section class="min-h-[90vh] flex flex-col justify-center items-center text-center px-6 py-20 bg-[url('https://placehold.net/1920x1080.png')] bg-cover bg-center bg-fixed relative">
+        <div class="absolute inset-0 bg-cream/85"></div>
+        <div class="relative z-10 flex flex-col items-center">
+            <div class="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md px-4 py-2 rounded-full font-bold text-sm text-espresso mb-8 shadow-sm">
+                <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                <span id="status-text">Memeriksa Jam...</span>
+            </div>
+            <h1 class="font-serif text-[clamp(2.5rem,6vw,5rem)] font-bold leading-tight text-espresso mb-6 max-w-4xl">
+                Bukan sekadar kedai kopi, ini <span class="italic text-latte">ruang tamu</span> keduamu.
+            </h1>
+            <p class="text-lg lg:text-xl text-mocha max-w-2xl font-light">
+                Selamat datang di Arsip Nusa Coffee. Tinggalkan hiruk-pikuk kota, pindai meja Anda, dan biarkan kami yang menyajikannya.
+            </p>
+        </div>
+    </section>
+
+    <main class="max-w-[1000px] mx-auto px-6 -mt-10 relative z-20">
+        
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 reveal delay-1">
+            <div class="bg-gradient-to-br from-mocha to-espresso text-cream p-8 lg:p-10 rounded-[32px] shadow-lg relative overflow-hidden group">
+                <div class="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-all duration-500"></div>
+                <div class="flex items-center justify-between mb-4 relative z-10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-latte"><i class="fas fa-ticket-alt text-xl"></i></div>
+                        <h2 class="font-serif text-2xl text-cream m-0">Promo Hari Ini</h2>
+                    </div>
+                    <span class="bg-red-500 text-white text-[0.65rem] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-md">New!</span>
+                </div>
+                <div class="relative z-10 mt-6">
+                    <h3 class="text-xl font-bold mb-2 text-white">Beli 2 Kopi, Gratis 1 Croissant</h3>
+                    <p class="text-oat text-sm leading-relaxed">Tunjukkan halaman ini ke kasir. Berlaku khusus <span class="italic">dine-in</span> dari jam 13.00 - 17.00 WIB setiap Senin & Kamis.</p>
+                </div>
+            </div>
+
+            <div class="bg-white/50 backdrop-blur-xl border border-white/60 p-8 lg:p-10 rounded-[32px] shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-oat/40 rounded-xl flex items-center justify-center text-espresso"><i class="fas fa-laptop-house text-lg"></i></div>
+                    <h2 class="font-serif text-2xl text-espresso m-0">Fasilitas Kami</h2>
+                </div>
+                <p class="text-mocha text-sm mb-6 leading-relaxed">Sangat mendukung untuk Anda yang ingin WFC (Work From Cafe) atau nugas dengan nyaman seharian.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-4">
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-10 h-10 bg-white shadow-sm rounded-full flex items-center justify-center text-mocha group-hover:text-espresso transition-colors flex-shrink-0"><i class="fas fa-wifi"></i></div>
+                        <span class="text-sm font-semibold text-espresso">Wi-Fi Cepat</span>
+                    </div>
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-10 h-10 bg-white shadow-sm rounded-full flex items-center justify-center text-mocha group-hover:text-espresso transition-colors flex-shrink-0"><i class="fas fa-plug"></i></div>
+                        <span class="text-sm font-semibold text-espresso">Colokan di Meja</span>
+                    </div>
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-10 h-10 bg-white shadow-sm rounded-full flex items-center justify-center text-mocha group-hover:text-espresso transition-colors flex-shrink-0"><i class="fas fa-snowflake"></i></div>
+                        <span class="text-sm font-semibold text-espresso">Ruangan Full AC</span>
+                    </div>
+                    <div class="flex items-center gap-4 group">
+                        <div class="w-10 h-10 bg-white shadow-sm rounded-full flex items-center justify-center text-mocha group-hover:text-espresso transition-colors flex-shrink-0"><i class="fas fa-car"></i></div>
+                        <span class="text-sm font-semibold text-espresso">Parkir Luas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cerita" class="scroll-target bg-white/60 backdrop-blur-xl border border-white/70 rounded-[40px] shadow-[0_20px_40px_rgba(41,28,14,0.03)] p-8 lg:p-12 mb-10 reveal grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="font-serif text-3xl lg:text-4xl text-espresso mb-6">Berawal dari Rindu</h2>
+                <p class="text-mocha text-lg leading-relaxed mb-4">Arsip Nusa Coffee dibangun dari kerinduan akan suasana rumah yang tenang. Sebuah tempat di mana Anda tidak perlu terburu-buru.</p>
+                <p class="text-mocha text-lg leading-relaxed">Setiap sudut kami rancang agar Anda merasa dipeluk oleh ketenangan. Ini adalah tempat di mana ide-ide hebat lahir dari istirahat yang berkualitas.</p>
+            </div>
+            <div class="rounded-[30px] overflow-hidden shadow-lg h-[300px] lg:h-[400px]">
+                <img src="https://placehold.net/600x600.png?text=Suasana+Arsip+Nusa" alt="Interior Cafe" class="w-full h-full object-cover">
+            </div>
+        </section>
+
+        <section class="bg-white/40 backdrop-blur-md border border-white/50 rounded-[40px] shadow-[0_20px_40px_rgba(41,28,14,0.03)] p-8 lg:p-12 mb-16 reveal delay-1">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="font-serif text-3xl lg:text-4xl text-espresso mb-4">Buku Menu Digital</h2>
+                <p class="text-mocha">Silakan jelajahi kurasi rasa kami. Tekan tombol lonceng merah di pojok kanan bawah untuk memesan langsung ke barista.</p>
+            </div>
+            
+            <div id="kopi" class="scroll-target mt-12 scroll-mt-28">
+                <h3 class="text-latte font-bold text-sm tracking-[0.2em] uppercase border-b-2 border-oat pb-3 mb-6">Kopi & Minuman</h3>
+                <div class="flex flex-col">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 py-6 border-b border-dashed border-oat hover:bg-white/50 hover:px-4 hover:rounded-2xl transition-all duration-300">
+                        <img src="https://placehold.net/400x400.png?text=Espresso" alt="Espresso" class="w-full sm:w-28 h-48 sm:h-28 rounded-2xl object-cover shadow-sm shrink-0">
+                        <div class="flex-grow w-full">
+                            <div class="flex gap-2 mb-2">
+                                <span class="bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fas fa-sparkles mr-1"></i> Best Seller</span>
+                                <span class="bg-red-50 text-red-700 border border-red-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fas fa-fire mr-1"></i> HOT</span>
+                            </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h4 class="font-bold text-xl text-espresso">Arsip Signature Blend</h4>
+                                <span class="font-serif font-bold text-xl text-espresso whitespace-nowrap">35K</span>
+                            </div>
+                            <p class="text-sm italic text-mocha max-w-md">100% Arabica pilihan dengan notes dark chocolate & karamel manis.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 py-6 border-b border-dashed border-oat hover:bg-white/50 hover:px-4 hover:rounded-2xl transition-all duration-300">
+                        <img src="https://placehold.net/400x400.png?text=Oat+Latte" alt="Oat Latte" class="w-full sm:w-28 h-48 sm:h-28 rounded-2xl object-cover shadow-sm shrink-0">
+                        <div class="flex-grow w-full">
+                            <div class="flex gap-2 mb-2">
+                                <span class="bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fas fa-snowflake mr-1"></i> ICE</span>
+                            </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h4 class="font-bold text-xl text-espresso">Creamy Oat Latte</h4>
+                                <span class="font-serif font-bold text-xl text-espresso whitespace-nowrap">42K</span>
+                            </div>
+                            <p class="text-sm italic text-mocha max-w-md">Susu gandum premium dipadu espresso yang lembut dan menenangkan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="makanan" class="scroll-target mt-12 scroll-mt-28">
+                <h3 class="text-latte font-bold text-sm tracking-[0.2em] uppercase border-b-2 border-oat pb-3 mb-6">Makanan Utama</h3>
+                <div class="flex flex-col">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 py-6 border-b border-dashed border-oat hover:bg-white/50 hover:px-4 hover:rounded-2xl transition-all duration-300">
+                        <img src="https://placehold.net/400x400.png?text=Avocado+Toast" alt="Avocado Toast" class="w-full sm:w-28 h-48 sm:h-28 rounded-2xl object-cover shadow-sm shrink-0">
+                        <div class="flex-grow w-full">
+                            <div class="flex gap-2 mb-2">
+                                <span class="bg-orange-100 text-orange-800 border border-orange-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fas fa-hat-chef mr-1"></i> Chef's Recommend</span>
+                            </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h4 class="font-bold text-xl text-espresso">Avocado Toast & Egg</h4>
+                                <span class="font-serif font-bold text-xl text-espresso whitespace-nowrap">55K</span>
+                            </div>
+                            <p class="text-sm italic text-mocha max-w-md">Roti gandum panggang artisan, alpukat segar tumbuk berbumbu, dan telur rebus.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dessert" class="scroll-target mt-12 scroll-mt-28">
+                <h3 class="text-latte font-bold text-sm tracking-[0.2em] uppercase border-b-2 border-oat pb-3 mb-6">Dessert & Camilan</h3>
+                <div class="flex flex-col">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 py-6 hover:bg-white/50 hover:px-4 hover:rounded-2xl transition-all duration-300">
+                        <img src="https://placehold.net/400x400.png?text=Croissant" alt="Butter Croissant" class="w-full sm:w-28 h-48 sm:h-28 rounded-2xl object-cover shadow-sm shrink-0">
+                        <div class="flex-grow w-full">
+                            <div class="flex gap-2 mb-2">
+                                <span class="bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider"><i class="fas fa-sparkles mr-1"></i> Best Seller</span>
+                            </div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h4 class="font-bold text-xl text-espresso">Classic Butter Croissant</h4>
+                                <span class="font-serif font-bold text-xl text-espresso whitespace-nowrap">28K</span>
+                            </div>
+                            <p class="text-sm italic text-mocha max-w-md">Dipanggang segar setiap pagi. Tekstur renyah di luar dengan lapisan lumer di dalam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ruangan" class="scroll-target mb-24 reveal">
+            <div class="flex justify-between items-end mb-8 px-2">
+                <div>
+                    <h2 class="font-serif text-3xl lg:text-4xl text-espresso mb-2">Jelajah Ruang</h2>
+                    <p class="text-mocha">Pilih sudut ternyaman Anda sebelum berkunjung.</p>
+                </div>
+                <div class="hidden md:flex gap-3">
+                    <button onclick="slideLeft()" class="w-12 h-12 rounded-full bg-white/60 hover:bg-white text-espresso shadow-sm flex justify-center items-center transition-all border border-white/80">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button onclick="slideRight()" class="w-12 h-12 rounded-full bg-white/60 hover:bg-white text-espresso shadow-sm flex justify-center items-center transition-all border border-white/80">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="room-slider" class="flex gap-6 overflow-x-auto snap-x-mandatory no-scrollbar pb-8 pt-4 scroll-smooth px-2">
+                
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Fasad Depan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Fasad Depan</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Desain bata ekspos dan tanaman hijau menyambut Anda sebelum masuk ke ruang utama.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Area Slow Bar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Area Slow Bar</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Duduk di sini jika Anda ingin mengobrol langsung dengan barista tentang biji kopi pilihan hari ini.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Indoor Utama" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Main Indoor Area</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Nyaman dan sejuk dengan pencahayaan hangat. Cocok untuk mengobrol santai bersama teman.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Meja Komunal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Meja Komunal WFC</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Meja kayu solid dengan colokan listrik melimpah. Spot paling favorit untuk WFC atau nugas kelompok.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Sofa Corner" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Cozy Sofa Corner</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Sudut paling santai dengan sofa beludru yang empuk. Pas untuk bersantai sambil membaca buku.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Teras Depan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Teras (Pet Friendly)</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Area outdoor depan yang sejuk dan ramah untuk Anda yang membawa hewan peliharaan tersayang.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Smoking Area" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Backyard Smoking</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Area semi-outdoor di belakang yang rimbun oleh tanaman, memberikan sirkulasi udara yang baik.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Private Room" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Private Meeting</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Ruangan kedap suara untuk rapat atau kumpul privat. Dilengkapi proyektor mini dan papan tulis.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Spot OOTD" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Spot OOTD</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Sudut estetik dengan cermin besar dan pencahayaan natural untuk mengabadikan momen outfit Anda.</p>
+                    </div>
+                </div>
+
+                <div class="w-[80vw] sm:w-[320px] flex-shrink-0 snap-center bg-white/70 backdrop-blur-md rounded-[32px] p-4 border border-white/80 shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 flex flex-col group">
+                    <div class="relative w-full aspect-square mb-4 overflow-hidden rounded-[24px]">
+                        <img src="https://placehold.net/400x400.png" alt="Fasilitas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h3 class="font-bold text-xl text-espresso mb-1">Fasilitas Bersih</h3>
+                        <p class="text-sm text-mocha leading-relaxed">Mushola yang sejuk dan toilet yang selalu terjaga kebersihannya untuk kenyamanan ekstra Anda.</p>
+                    </div>
+                </div>
+
+            </div>
+            <p class="text-center text-xs text-mocha mt-2 md:hidden italic"><i class="fas fa-arrows-alt-h mr-1"></i> Geser untuk melihat ruangan lainnya</p>
+        </section>
+
+        <section id="lokasi" class="scroll-target grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 reveal">
+            <div class="bg-white/60 backdrop-blur-xl border border-white/70 p-6 rounded-[40px] shadow-[0_20px_40px_rgba(41,28,14,0.03)] flex flex-col h-full">
+                <h2 class="font-serif text-2xl text-espresso mb-4 flex items-center gap-3"><i class="fas fa-map-marked-alt text-mocha"></i> Lokasi Kami</h2>
+                <div class="w-full flex-grow rounded-[24px] overflow-hidden min-h-[250px] shadow-inner">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.24009710317!2d106.758801!3d-6.2297464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJakarta%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <p class="text-mocha text-sm mt-4 font-semibold text-center">Jl. Mahoni Indah No. 12, Jakarta Selatan</p>
+            </div>
+
+            <div class="bg-white/60 backdrop-blur-xl border border-white/70 p-8 lg:p-10 rounded-[40px] shadow-[0_20px_40px_rgba(41,28,14,0.03)] h-full">
+                <h2 class="font-serif text-2xl text-espresso mb-6 flex items-center gap-3"><i class="fas fa-question-circle text-mocha"></i> Info Praktis</h2>
+                
+                <div class="flex flex-col gap-3">
+                    <details class="group bg-white/50 hover:bg-white/80 transition-colors rounded-2xl border border-white/50 overflow-hidden cursor-pointer">
+                        <summary class="font-bold text-espresso text-sm p-4 outline-none flex justify-between items-center select-none">
+                            Apakah menu di sini Halal?
+                            <i class="fas fa-chevron-down text-mocha group-open:rotate-180 transition-transform duration-300"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-mocha leading-relaxed border-t border-white/40 pt-2">Ya, 100% Halal. Kami memastikan seluruh bahan baku makanan dan minuman yang digunakan bebas dari alkohol.</div>
+                    </details>
+                    <details class="group bg-white/50 hover:bg-white/80 transition-colors rounded-2xl border border-white/50 overflow-hidden cursor-pointer">
+                        <summary class="font-bold text-espresso text-sm p-4 outline-none flex justify-between items-center select-none">
+                            Apakah ada area Smoking / Outdoor?
+                            <i class="fas fa-chevron-down text-mocha group-open:rotate-180 transition-transform duration-300"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-mocha leading-relaxed border-t border-white/40 pt-2">Tentu ada. Kami menyediakan area semi-outdoor di belakang cafe dan teras depan.</div>
+                    </details>
+                    <details class="group bg-white/50 hover:bg-white/80 transition-colors rounded-2xl border border-white/50 overflow-hidden cursor-pointer">
+                        <summary class="font-bold text-espresso text-sm p-4 outline-none flex justify-between items-center select-none">
+                            Bisa reservasi untuk acara ulang tahun / meeting?
+                            <i class="fas fa-chevron-down text-mocha group-open:rotate-180 transition-transform duration-300"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-mocha leading-relaxed border-t border-white/40 pt-2">Sangat bisa! Silakan hubungi kami via WhatsApp melalui tombol merah di pojok kanan bawah maksimal H-2.</div>
+                    </details>
+                    <details class="group bg-white/50 hover:bg-white/80 transition-colors rounded-2xl border border-white/50 overflow-hidden cursor-pointer">
+                        <summary class="font-bold text-espresso text-sm p-4 outline-none flex justify-between items-center select-none">
+                            Apakah cafe ini ramah untuk anak-anak?
+                            <i class="fas fa-chevron-down text-mocha group-open:rotate-180 transition-transform duration-300"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-mocha leading-relaxed border-t border-white/40 pt-2">Ya, cafe kami *Kids Friendly*. Kami menyediakan kursi khusus balita (high-chair) dan menu non-kopi yang aman.</div>
+                    </details>
+                    <details class="group bg-white/50 hover:bg-white/80 transition-colors rounded-2xl border border-white/50 overflow-hidden cursor-pointer">
+                        <summary class="font-bold text-espresso text-sm p-4 outline-none flex justify-between items-center select-none">
+                            Bagaimana sistem pembayarannya?
+                            <i class="fas fa-chevron-down text-mocha group-open:rotate-180 transition-transform duration-300"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-mocha leading-relaxed border-t border-white/40 pt-2">Kami menerima pembayaran Cashless (QRIS, Debit/Credit Card, GoPay, OVO) maupun Tunai (Cash).</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-espresso text-cream pt-24 pb-20 px-6 text-center rounded-t-[60px] reveal">
+        <h2 class="font-serif text-4xl lg:text-5xl mb-6 italic">Sampai Jumpa di Arsip Nusa.</h2>
+        <p class="text-oat text-lg max-w-xl mx-auto mb-10">Terima kasih sudah menjelajahi menu dan ruangan kami. Selamat menikmati kunjungan Anda.</p>
+        <p class="text-sm text-mocha/60">© 2026 Arsip Nusa Coffee. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Logika Slider Ruangan yang sudah disesuaikan ukuran card-nya
+        const roomSlider = document.getElementById('room-slider');
+        function slideLeft() { roomSlider.scrollBy({ left: -340, behavior: 'smooth' }); }
+        function slideRight() { roomSlider.scrollBy({ left: 340, behavior: 'smooth' }); }
+
+        function checkOpenStatus() {
+            const currentHour = new Date().getHours();
+            const statusText = document.getElementById("status-text");
+            const statusDot = document.getElementById("status-dot");
+            if (currentHour >= 8 && currentHour < 22) {
+                statusText.innerHTML = "Kami Sedang Buka"; statusDot.classList.remove("bg-red-500"); statusDot.classList.add("bg-[#38a169]", "animate-[pulse_2s_infinite]");
+            } else {
+                statusText.innerHTML = "Kami Sedang Tutup"; statusDot.classList.remove("bg-[#38a169]", "animate-[pulse_2s_infinite]"); statusDot.classList.add("bg-red-500");
+            }
+        }
+        checkOpenStatus();
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) { reveals[i].classList.add("active"); }
+            }
+        }
+        window.addEventListener("scroll", reveal); reveal();
+
+        const floatingNav = document.getElementById("floating-nav");
+        const triggerSection = document.getElementById("cerita");
+        window.addEventListener("scroll", () => {
+            const triggerTop = triggerSection.getBoundingClientRect().top;
+            if (triggerTop < window.innerHeight / 1.5) {
+                floatingNav.classList.remove("opacity-0", "invisible", "lg:-translate-x-12", "translate-y-[100px]");
+                floatingNav.classList.add("lg:translate-x-0", "translate-y-0");
+            } else {
+                floatingNav.classList.add("opacity-0", "invisible", "lg:-translate-x-12", "translate-y-[100px]");
+                floatingNav.classList.remove("lg:translate-x-0", "translate-y-0");
+            }
+        });
+
+        const sections = document.querySelectorAll(".scroll-target");
+        const navLinks = document.querySelectorAll(".nav-link");
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop <= 300) { current = section.getAttribute("id"); }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove("active-nav");
+                if (current && link.getAttribute("href") === "#" + current) {
+                    link.classList.add("active-nav");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
